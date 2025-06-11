@@ -1,5 +1,6 @@
 package com.login.authservice.security;
 
+import com.login.authservice.model.User;
 import com.login.authservice.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,7 +16,9 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String mail) throws UsernameNotFoundException {
-        return userRepository.findByMail(mail)
+        User user = userRepository.findByMail(mail)
                 .orElseThrow(() -> new UsernameNotFoundException("Usuario no encontrado"));
+
+        return new CustomUserDetails(user);
     }
 }
