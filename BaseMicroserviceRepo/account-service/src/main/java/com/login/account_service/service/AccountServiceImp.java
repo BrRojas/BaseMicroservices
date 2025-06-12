@@ -2,6 +2,7 @@ package com.login.account_service.service;
 
 import com.login.account_service.dto.AccountRequestDTO;
 import com.login.account_service.dto.AccountResponseDTO;
+import com.login.account_service.model.Account;
 import com.login.account_service.repository.AccountRepository;
 import com.login.account_service.utils.AccountMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,26 +26,37 @@ public class AccountServiceImp implements AccountService{
     }
 
     @Override
-    public void deleteAccount(Long accountId) {
+    public void deleteAccount(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con ID: " + id));
 
-    }
-
-
+        accountRepository.deleteById(id);
+        }
 
 
 
     @Override
     public AccountResponseDTO createAccount(AccountRequestDTO request) {
-        return null;
+        Account account = AccountMapper.toEntity(request);
+        Account saved = accountRepository.save(account);
+        return AccountMapper.toDTO(saved);
     }
 
     @Override
-    public AccountResponseDTO depositAccount(Long accountId, Double amount) {
-        return null;
+    public AccountResponseDTO depositAccount(Long id, Double amount) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Cuenta no encontrada con ID: " + id));
+
+        account.setBalance(account.getBalance()+amount);
+        Account updated = accountRepository.save(account);
+
+        return AccountMapper.toDTO(updated);
     }
 
     @Override
-    public AccountResponseDTO getAccountById(Long accountId) {
-        return null;
+    public AccountResponseDTO getAccountById(Long id) {
+        Account account = accountRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Cuenta no encontrada con ID: " + id));
+        return AccountMapper.toDTO(account);
     }
 }
