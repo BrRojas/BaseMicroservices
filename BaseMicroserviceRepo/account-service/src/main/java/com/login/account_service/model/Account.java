@@ -1,9 +1,7 @@
 package com.login.account_service.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.login.account_service.utils.Type;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -24,7 +22,10 @@ public class Account {
     private UUID id;
 
     private UUID userId; // para saber de quién es la cuenta
-    private String type; // tipo de cuenta (ej: CAJA_AHORRO)
+
+    @Enumerated(EnumType.STRING)
+    private Type type; // tipo de cuenta (CAJA_AHORRO/CUENTA_CORRIENTE)
+
     private Double balance;
     private LocalDateTime createdAt;
 }
